@@ -121,7 +121,7 @@ Portainer was deployed to provide a graphical management interface for Docker co
 | System initially failed to boot and display video output | Reseated RAM modules and CMOS battery during hardware troubleshooting |
 | Unable to recreate installation media | Replaced a write-protected USB drive |
 | Docker install failed | Corrected Docker repository configuration and package sources |
-| Ubuntu Server VM received a new IP address after reboot | Identified the new DHCP-assigned address and updated SSH connection settings |
+| Ubuntu VM received a new IP address after reboot | Configured a static IP address to prevent future DHCP reassignment |
 
 ---
 
