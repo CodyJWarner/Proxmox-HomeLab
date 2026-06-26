@@ -4,8 +4,10 @@
 ![Docker](https://img.shields.io/badge/Docker-Containers-2496ED)
 ![SSH](https://img.shields.io/badge/Remote%20Access-SSH-black)
 ![Portainer](https://img.shields.io/badge/Portainer-CE-13BEF9)
+![Pi-hole](https://img.shields.io/badge/Pi--hole-DNS%20Filtering-red)
 
 This repository documents the development of my personal homelab environment built on a repurposed gaming desktop. The project focuses on learning and gaining hands-on experience with virtualization, Linux server administration, remote management, containerization, and infrastructure troubleshooting. Each deployment, configuration change, and service installation is documented step-by-step to demonstrate both implementation and problem-solving skills.
+This documents my experience and lessons learned from building and expanding a homelab environment. Each deployment, configuration, and troubleshooting step is recorded to track my progress and what I've learned.
 <br>
 
 ## Skills Demonstrated
@@ -22,6 +24,7 @@ This repository documents the development of my personal homelab environment bui
 - [SSH Configuration](#ssh-configuration)
 - [Docker Installation](#docker-installation)
 - [Portainer Deployment](#portainer-deployment)
+- [Pi-hole Deployment](#pi-hole-deployment)
 - [Troubleshooting](#troubleshooting)
 - [Future Plans](#future-plans)
 
@@ -69,7 +72,7 @@ Installed and configured OpenSSH Server to enable remote administration from a s
 *Confirms network configuration (ip a) on the Ubuntu Server VM after SSH login.*
 
 ### Purpose
-SSH was configured to allow remote administration of the Ubuntu Server VM from a separate workstation without requiring direct access through the Proxmox console.
+SSH was configured to allow remote administration of the Ubuntu Server VM from a separate workstation (my main computer) without requiring direct access through the Proxmox console.
 
 ---
 
@@ -114,6 +117,35 @@ Portainer was deployed to provide a graphical management interface for Docker co
 
 ---
 
+## Pi-hole Deployment
+Deployed Pi-hole as a Docker container to provide DNS filtering capabilities within the homelab. During deployment, a networking conflict was encountered because Ubuntu's "systemd-resolved" service was already using DNS port 53. To continue testing without disrupting the host operating system, Pi-hole was temporarily configured to use an alternate host port.
+
+<br>
+<img width="468" height="41" alt="Created folders to save pihole configuration settings" src="https://github.com/user-attachments/assets/51603506-3dd0-4ffe-a058-6c59a72b70f8" />
+
+*Created persistent directories to store Pi-hole configuration files and DNS settings outside of the Docker container. This ensures configuration data is retained if the container is recreated.*
+
+<br>
+<img width="604" height="250" alt="created pihole container" src="https://github.com/user-attachments/assets/d0cee1d2-72d6-405b-b4ba-2d57b6564150" />
+
+*Downloaded the official Pi-hole image from Docker Hub and deployed the container with persistent storage, Docker restart policies, and web interface access.*
+
+<br>
+<img width="2166" height="130" alt="Verified Pihole is running" src="https://github.com/user-attachments/assets/03550ee0-5ea1-4d63-a89b-2af5e18dc955" />
+
+*Verified that the Pi-hole container was running successfully alongside the existing Portainer container. The container was temporarily mapped to host port 5353 because the default DNS port was unavailable.*
+
+<br>
+<img width="1241" height="1300" alt="Pi hole running on web interface" src="https://github.com/user-attachments/assets/05e68adc-0bfb-45ae-9df7-32def290d969" />
+
+*Successfully accessed the Pi-hole administrative dashboard, confirming the container deployment. The dashboard displays available blocklists, DNS statistics, and monitoring features.*
+
+### Purpose
+
+Pi-hole was deployed to learn and test DNS filtering within my homelab while expanding my understanding of Docker networking, Linux administration, and containerized network services. My next goal is to configure Pi-hole as the primary DNS server for client devices and observe DNS traffic in a real-world environment.
+
+---
+
 ## Troubleshooting
 
 | Issue | Resolution |
@@ -122,13 +154,15 @@ Portainer was deployed to provide a graphical management interface for Docker co
 | Unable to recreate installation media | Replaced a write-protected USB drive |
 | Docker install failed | Corrected Docker repository configuration and package sources |
 | Ubuntu VM received a new IP address after reboot | Configured a static IP address to prevent future DHCP reassignment |
+| Pi-hole failed to start because DNS port 53 was already in use | Identified "systemd-resolved" as the conflicting service and temporarily mapped Pi-hole to host port 5353 for testing while planning full DNS integration |
 
 ---
 
 ## Future Plans
 
-- Configure a static IP for the Ubuntu Server VM
-- Deploy Pi-hole for DNS filtering
+- Complete Pi-hole integration for DNS filtering
+- Learn Docker Compose for multi-container deployments
 - Deploy Uptime Kuma for service monitoring
-- Implement centralized logging
-- Add additional VMs for segmented services
+- Deploy additional self-hosted services
+- Create additional virtual machines for network segmentation
+- Configure automated backups for Docker volumes and virtual machines
